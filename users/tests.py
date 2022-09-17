@@ -37,7 +37,6 @@ class TestViews(TestSetup):
     def test_user_can_register(self):
         # test that a user can register with data
         response = self.client.post(self.register_url, self.user_data, format="json")
-        
         # import pdb
         # pdb.set_trace()
 
