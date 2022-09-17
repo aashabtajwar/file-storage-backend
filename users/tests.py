@@ -6,9 +6,10 @@ from rest_framework.test import APITestCase
 
 class TestSetup(APITestCase):
     
+    # method called before carrying out a test case
     def setUp(self):
         self.register_url = reverse('register')
-        user_data = {
+        self.user_data = {
             'email': 'email@gmail.com',
             'username': 'email',
             'first_name': 'emailed',
@@ -20,6 +21,7 @@ class TestSetup(APITestCase):
         # so we are calling super() for each
         return super().setUp()
 
+    # called after a test case is completed
     def tearDown(self):
         return super().tearDown()
 
@@ -31,3 +33,13 @@ class TestViews(TestSetup):
         # testing that a user cannot register without data
         response = self.client.post(self.register_url)
         self.assertEqual(response.status_code, 400)
+
+    def test_user_can_register(self):
+        # test that a user can register with data
+        response = self.client.post(self.register_url, self.user_data, format="json")
+        
+        # import pdb
+        # pdb.set_trace()
+
+        self.assertEqual(response.data['message'], 'Registration Success')
+        self.assertEqual(response.status_code, 201)
