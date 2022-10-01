@@ -29,6 +29,11 @@ ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
 
+AUTHENTICATION_BACKENDS = [
+    'users.api.backends.CustomAuthentication',
+    'django.contrib.auth.backends.ModelBackend'
+]
+
 
 # Application definition
 

@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from .serializers import RegistrationSerializer 
+from .backends import CustomAuthentication 
 
 @api_view(['POST'])
 def userRegistration(request):
@@ -24,3 +25,15 @@ def userRegistration(request):
         data = {"message": "No data given"}
         return Response(data, status = status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(['POST'])
+def userLogin(request):
+    print(request.data)
+    email = request.data['email']
+    password = request.data['password']
+    print('THIS FAR')
+    user = CustomAuthentication.authenticate(request, email, password)
+    if user is None:
+        return Response({'message': 'Invalid'})
+    return Response({"message": "Okay"})
