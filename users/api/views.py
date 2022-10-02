@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from .serializers import RegistrationSerializer 
-from .backends import CustomAuthentication 
+from .serializers import RegistrationSerializer, UserSerializer 
+from .backends import CustomAuthentication, TokenJWT
+
+from .backends import CustomAuthentication
 
 @api_view(['POST'])
 def userRegistration(request):
@@ -36,4 +38,20 @@ def userLogin(request):
     user = CustomAuthentication.authenticate(request, email, password)
     if user is None:
         return Response({'message': 'Invalid'})
-    return Response({"message": "Okay"})
+    
+
+    # val = user.email
+    # print("Printing User\n")
+    # print(val)
+    # generate jwt token
+    instance = TokenJWT()
+    token = instance.generateJWT(user.username, user.email)
+    return Response({"message": "Login Success", "token": token})
+
+    # serializer = UserSerializer(data = user)
+    # if serializer.is_valid():
+    #     # generate jwt token
+    #     instance = TokenJWT()
+    #     # token = instance.generateJWT(user.username, user.email)
+    #     print(serializer.data)
+    #     return Response({"message": serializer.data})

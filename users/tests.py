@@ -1,3 +1,4 @@
+from http import client
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase
@@ -9,6 +10,7 @@ class TestSetup(APITestCase):
     # method called before carrying out a test case
     def setUp(self):
         self.register_url = reverse('register')
+        self.login_url = reverse('user-login')
         self.user_data = {
             'email': 'email@gmail.com',
             'username': 'email',
@@ -16,7 +18,10 @@ class TestSetup(APITestCase):
             'last_name': 'user',
             'password': 'testing111'
         }
-
+        self.login_data = {
+            'email' : 'hqhunter780@gmail.com',
+            'password': 'testing111',
+        }
         # we are overwriting setUp and tearDown() methods
         # so we are calling super() for each
         return super().setUp()
@@ -42,3 +47,24 @@ class TestViews(TestSetup):
 
         self.assertEqual(response.data['message'], 'Registration Success')
         self.assertEqual(response.status_code, 201)
+
+    def test_user_can_login(self):
+        response = self.client.post(self.login_url, self.login_data, format = "json")
+        self.assertEqual(response.status_code, 200)
+
+# class TestLoginSetup(APITestCase):
+#     def setUp(self):
+#         self.login_url = reverse('user-login')
+#         self.user_data = {
+#             'email': 'hqhunter780@gmail.com',
+#             'password': 'testing111',
+#         }
+#         return super().setUp()
+    
+#     def tearDown(self):
+#         return super().tearDown()
+
+# class LoginTestViews(TestLoginSetup):
+#     def test_user_can_login(self):
+#         response = self.client.post(self.login_url, self.user_data, format = "json")
+#         self.assertEqual(response.data['message'], 'Okay')

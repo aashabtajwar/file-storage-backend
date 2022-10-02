@@ -28,3 +28,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         print("\nPRINTING VALIDATED DATA")
         return User.objects.create_user(**validated_data)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'username']
+        read_only_fields = ('id',)
+        extra_kwargs = {
+            'password' : {'write_only': True}
+                }
