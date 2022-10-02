@@ -39,19 +39,7 @@ def userLogin(request):
     if user is None:
         return Response({'message': 'Invalid'})
     
-
-    # val = user.email
-    # print("Printing User\n")
-    # print(val)
-    # generate jwt token
     instance = TokenJWT()
     token = instance.generateJWT(user.username, user.email)
     return Response({"message": "Login Success", "token": token})
 
-    # serializer = UserSerializer(data = user)
-    # if serializer.is_valid():
-    #     # generate jwt token
-    #     instance = TokenJWT()
-    #     # token = instance.generateJWT(user.username, user.email)
-    #     print(serializer.data)
-    #     return Response({"message": serializer.data})

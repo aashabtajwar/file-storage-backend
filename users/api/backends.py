@@ -1,4 +1,5 @@
 from django.contrib.auth.backends import BaseBackend
+from django.shortcuts import get_object_or_404
 from ..models import User
 
 import jwt
@@ -24,7 +25,8 @@ class CustomAuthentication:
 
     def get_user(self, user_id):
         try:
-            return User.objects.get(pk=user_id)
+            # return User.objects.get(pk=user_id)
+            return get_object_or_404(User, pk=user_id)
         except User.DoesNotExist:
             return None
 

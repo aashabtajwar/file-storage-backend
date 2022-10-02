@@ -19,7 +19,7 @@ class TestSetup(APITestCase):
             'password': 'testing111'
         }
         self.login_data = {
-            'email' : 'hqhunter780@gmail.com',
+            'email' : 'email@gmail.com',
             'password': 'testing111',
         }
         # we are overwriting setUp and tearDown() methods
@@ -49,8 +49,24 @@ class TestViews(TestSetup):
         self.assertEqual(response.status_code, 201)
 
     def test_user_can_login(self):
-        response = self.client.post(self.login_url, self.login_data, format = "json")
-        self.assertEqual(response.status_code, 200)
+        # login cannot work before registering first
+
+        registrationResponse = self.client.post(self.register_url, self.user_data, format="json")
+        loginResponse = self.client.post(self.login_url, self.login_data, format="json")
+        # import pdb
+        # pdb.set_trace()
+        self.assertEqual(loginResponse.status_code, 200)
+
+
+
+
+
+
+
+
+
+
+
 
 # class TestLoginSetup(APITestCase):
 #     def setUp(self):
