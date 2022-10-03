@@ -21,8 +21,8 @@ class CustomAuthentication:
         else:
             return None
 
-        pass
-
+    # gets the user
+    # this method is by default needed for authentication backends
     def get_user(self, user_id):
         try:
             # return User.objects.get(pk=user_id)
@@ -32,6 +32,10 @@ class CustomAuthentication:
 
 
 class TokenJWT:
+    # method to generate token
+    # the claims will be username, email and expiration time
+    # the secret is used from here for now, but will be used a different one in future
+    # the algorithm is HS256
     def generateJWT(self, username, email):
         encode = jwt.encode({
             "exp": time.time() + 300,

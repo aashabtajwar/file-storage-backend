@@ -8,6 +8,12 @@ from .backends import CustomAuthentication, TokenJWT
 
 from .backends import CustomAuthentication
 
+
+@api_view(['GET'])
+def testRoute(request):
+    token = request.META.get('HTTP_AUTHORIZATION')
+    return Response({"message": token})
+
 @api_view(['POST'])
 def userRegistration(request):
     serializer = RegistrationSerializer(data = request.data)
