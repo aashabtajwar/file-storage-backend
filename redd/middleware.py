@@ -17,12 +17,7 @@ class AuthMiddleware:
         print(get_response)
 
     def __call__(self, request):
-        # print(request)
-        # print('Printing request')
-        # print(request)
         response = self.get_response(request)
-        # print('PRINTING response')
-        # print(response)
         return response
 
 
@@ -45,17 +40,22 @@ class AuthMiddleware:
         """
 
         # get token
-        print(request.META['PATH_INFO'] == '/api/user/login/')
+        print(request.META['PATH_INFO'] == '/api/user/login/') # True when login
+        
         token = request.META.get('HTTP_AUTHORIZATION')
 
         # if there is no token
         if token is None:
             # check if url is anything other than login or register
             print('Should follow here')
-            if (request.META['PATH_INFO'] != '/api/user/login/') or (request.META['PATH_INFO'] != '/api/user/register/'):
-                print('why is this invoking')
-                return JsonResponse({"message": "Unauthorized"}, status = 401)
-        
+            url = request.META['PATH_INFO']
+            print(f'path info {url}')
+            if (request.META['PATH_INFO'] != '/api/user/login/') and (request.META['PATH_INFO'] != '/api/user/register/'):
+
+                return JsonResponse({"message": "Not Authorized"}, status = 401)
+            # if url is for login or register, allow
+
+
         # if there is a token
         else:
             # check if token has expired
@@ -70,7 +70,7 @@ class AuthMiddleware:
             except jwt.ExpiredSignatureError:
                 # token has expired
                 # do not allow anything other than login or register 
-                if request.META['PATH_INFO'] != '/api/user/login/' or request.META['PATH_INFO'] != '/api/user/register/':
+                if request.META['PATH_INFO'] != '/api/user/login/' and request.META['PATH_INFO'] != '/api/user/register/':
                     return JsonResponse({"message": "Unauthorized"}, status = 401)
 
         # print('Printing relative url')
@@ -83,16 +83,3 @@ class AuthMiddleware:
         #     # check url
         #     # if url is login
         #     return JsonResponse({"message": "Expired"})
-
-
-        # verify if the token exists
-
-        # print(token)
-        # print('request:  ')
-        # print(request)
-        # print('view Func:  ')
-        # print(view_func)
-        # print('view args:  ')
-        # print(view_args)
-        # print('view kwargs:  ')
-        # print(view_kwargs)

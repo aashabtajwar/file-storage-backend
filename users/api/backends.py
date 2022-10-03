@@ -38,7 +38,7 @@ class TokenJWT:
     # the algorithm is HS256
     def generateJWT(self, username, email):
         encode = jwt.encode({
-            "exp": time.time() + 300,
+            "exp": time.time() + 10,
             "username": username,
             "email": email,
         },
