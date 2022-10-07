@@ -14,7 +14,7 @@ secret = "secret"
 class AuthMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-        print(get_response)
+        # print(get_response)
 
     def __call__(self, request):
         response = self.get_response(request)
@@ -40,16 +40,16 @@ class AuthMiddleware:
         """
 
         # get token
-        print(request.META['PATH_INFO'] == '/api/user/login/') # True when login
+        # print(request.META['PATH_INFO'] == '/api/user/login/') # True when login
         
         token = request.META.get('HTTP_AUTHORIZATION')
 
         # if there is no token
         if token is None:
             # check if url is anything other than login or register
-            print('Should follow here')
+            # print('Should follow here')
             url = request.META['PATH_INFO']
-            print(f'path info {url}')
+            # print(f'path info {url}')
             if (request.META['PATH_INFO'] != '/api/user/login/') and (request.META['PATH_INFO'] != '/api/user/register/'):
 
                 return JsonResponse({"message": "Not Authorized"}, status = 401)

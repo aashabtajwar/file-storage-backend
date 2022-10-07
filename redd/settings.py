@@ -96,6 +96,11 @@ DATABASES = {
     }
 }
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_PARSER_CLASSES': [
+#         'rest_framework.parsers.FileUploadParser',
+#     ]
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

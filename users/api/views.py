@@ -21,8 +21,8 @@ def userRegistration(request):
     
     # check if the data is valid
     if serializer.is_valid():
-        print('\nPrinting Validated Data')
-        print(serializer.validated_data)
+        # print('\nPrinting Validated Data')
+        # print(serializer.validated_data)
         # user_data = serializer.validated_data
         account = serializer.save()
         data['message'] = 'Registration Success'
@@ -37,10 +37,10 @@ def userRegistration(request):
 
 @api_view(['POST'])
 def userLogin(request):
-    print(request.data)
+    # print(request.data)
     email = request.data['email']
     password = request.data['password']
-    print('THIS FAR')
+    # print('THIS FAR')
     user = CustomAuthentication.authenticate(request, email, password)
     if user is None:
         return Response({'message': 'Invalid'})

@@ -12,8 +12,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ['email', 'first_name', 'last_name', 'username', 'password']
     
     def validate(self, attrs):
-        print("\nNOW PRINTING THE attrs:")
-        print(attrs)
+        # print("\nNOW PRINTING THE attrs:")
+        # print(attrs)
         email = attrs.get('email', '')
         username = attrs.get('username', '')
         first_name = attrs.get('first_name', '')
@@ -26,7 +26,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
     # called when serializer.save() is called
     def create(self, validated_data):
-        print("\nPRINTING VALIDATED DATA")
+        # print("\nPRINTING VALIDATED DATA")
         return User.objects.create_user(**validated_data)
 
 
