@@ -23,24 +23,53 @@ db = mongoClient['redd']
 def fileUpload(request):
     # get file
     # get the file metadata
-
-
-
-
-    someText = "text of some file"
-    value_bytes = someText.encode('utf-8')
-    value_stream = io.BytesIO(value_bytes)
-    print(type(value_bytes))
-    print(type(value_stream))
+    # store the metadata in mongodb
+    # store the file in minio
     
-    file = request.FILES.get('file')
-    # destination = open('some_file.txt', 'wb+')
-    val = ".".encode('utf-8')
-    print((file.chunks()))
+
+    # get file metadata (file type, file size, file name)
+    # the db will take care of the created_at and updated_at metadata    
+    file = request.FILES.get("file")
+    file_metadata = {
+        'file_size' : file.size,
+        'file_type' : file.content_type,
+        'file_name' : file.name,
+    }
+    # store the data in mongoDB
+    collection = db['fileMetaData']
+    insert = collection.insert_one(file_metadata)
+    file_id = insert.inserted_id
+
+    # now handle file
+    fileBytes = '.'.encode('utf-8')
     for chunk in file.chunks():
-        val += chunk
-        # print(type(chunk))
-    print(val)
+        fileBytes += chunk
+    fileValueStream = io.BytesIO(fileBytes)
+
+    # store 
+
+
+
+    # get relevant metadata
+    
+
+
+
+
+    # someText = "text of some file"
+    # value_bytes = someText.encode('utf-8')
+    # value_stream = io.BytesIO(value_bytes)
+    # print(type(value_bytes))
+    # print(type(value_stream))
+    
+    # file = request.FILES.get('file')
+    # # destination = open('some_file.txt', 'wb+')
+    # val = ".".encode('utf-8')
+    # print((file.chunks()))
+    # for chunk in file.chunks():
+    #     val += chunk
+    #     # print(type(chunk))
+    # print(val)
 
 
 
@@ -83,4 +112,3 @@ def fileUpload(request):
     #     print(f.read())
     # print(request.FILES)
     return Response({'message': 'Files'})
-    pass
