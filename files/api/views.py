@@ -6,7 +6,7 @@ from rest_framework.parsers import FileUploadParser
 from .serializers import FileSerializer
 
 import io
-import minio
+from minio import Minio
 
 
 # import and connect to mongodb
@@ -14,7 +14,14 @@ import pymongo
 mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
 db = mongoClient['redd']
 
-
+# set up min io
+minioBucket = Minio(
+    "localhost:9000",
+    access_key="minioadmin",
+    secret_key="minioadmin",
+    secure=False
+)
+bucket_name = "djangofilestorage"
 
 
 
@@ -38,13 +45,15 @@ def fileUpload(request):
     # store the data in mongoDB
     collection = db['fileMetaData']
     insert = collection.insert_one(file_metadata)
-    file_id = insert.inserted_id
+    file_id = str(insert.inserted_id)
 
     # now handle file
     fileBytes = '.'.encode('utf-8')
     for chunk in file.chunks():
         fileBytes += chunk
     fileValueStream = io.BytesIO(fileBytes)
+    
+    minioBucket.put_object("djangofilestorage", file_id, fileValueStream, length=len(fileBytes))
 
     # store 
 
