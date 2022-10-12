@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
 from .serializers import FileSerializer
 
-
+import jwt
 import io
 from minio import Minio
 from bson.objectid import ObjectId
@@ -33,7 +33,9 @@ bucket_name = "djangofilestorage"
 # trying out a class based view
 class GetTest(APIView):
     def get(self, request, format = None):
-        return Response({"message": "Testing class based view"})
+        token = request.META.get('HTTP_AUTHORIZATION')
+        token_content = jwt.decode(token, "secret", algorithms="HS256")
+        return Response({"message": token_content})
 
 
 # file upload

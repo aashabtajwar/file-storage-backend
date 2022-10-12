@@ -46,6 +46,6 @@ def userLogin(request):
         return Response({'message': 'Invalid'})
     
     instance = TokenJWT()
-    token = instance.generateJWT(user.username, user.email)
+    token = instance.generateJWT(user.username, user.email, user.id)
     return Response({"message": "Login Success", "token": token})
 
