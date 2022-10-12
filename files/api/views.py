@@ -48,7 +48,9 @@ class UploadFile(APIView):
         # store the file in minio
 
 
-
+        # get current user id and username
+        token = request.META.get('HTTP_AUTHORIZATION')
+        token_content = jwt.decode(token, 'secret', algorithms="HS256")
         # get file metadata (file type, file size, file name)
         # get additional metadata -> user_id, username
         file = request.FILES.get('file')
@@ -56,6 +58,8 @@ class UploadFile(APIView):
             'file_size' : file.size,
             'file_type' : file.content_type,
             'file_name' : file.name,
+            'user_id' : token_content['id'],
+            'username' : token_content['username'],
         }
             # store the data in mongoDB
         collection = db['fileMetaData']
