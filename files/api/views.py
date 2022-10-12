@@ -65,6 +65,8 @@ class UploadFile(APIView):
         for chunk in file.chunks():
             fileBytes += chunk
         fileValueStream = io.BytesIO(fileBytes)
+        print('Now printing file bytes')
+        print(fileValueStream)
         
         minioBucket.put_object("djangofilestorage", file_id, fileValueStream, length=len(fileBytes))
 
@@ -78,15 +80,18 @@ class RetrieveFile(APIView):
     def post(self, request, pk):
         # file id
         file_id = str(pk)
-        collection = db['fileMetaData']
-        query = collection.find_one({"_id": ObjectId(file_id)})
-        data = {
-            'size' : query['file_size'],
-            'type': query['file_type'],
-            'name': query['file_name']
-        }
+        # collection = db['fileMetaData']
+        # query = collection.find_one({"_id": ObjectId(file_id)})
+        # data = {
+        #     'size' : query['file_size'],
+        #     'type': query['file_type'],
+        #     'name': query['file_name']
+        # }
+        object = minioBucket.get_object('djangofilestorage', file_id, length=0)
+        data = object.read()
         print(data)
-        return Response(data)
+
+        return Response(data, content_type="application/octet-stream")
 
 
 
