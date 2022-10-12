@@ -9,7 +9,10 @@ from .serializers import FileSerializer
 
 import io
 from minio import Minio
-
+from bson.objectid import ObjectId
+# && apk add install libmysqlclient-dev
+# && apk add --virtual build-deps gcc python3-dev musl-dev
+        
 
 # import and connect to mongodb
 import pymongo
@@ -66,6 +69,25 @@ class UploadFile(APIView):
         minioBucket.put_object("djangofilestorage", file_id, fileValueStream, length=len(fileBytes))
 
         return Response({"message": "Successfully Uploaded File"})
+
+
+# Retrieve File
+class RetrieveFile(APIView):
+    # @route - get - retrive file
+    # 6344ef97fdebad7c67d072fb
+    def post(self, request, pk):
+        # file id
+        file_id = str(pk)
+        collection = db['fileMetaData']
+        query = collection.find_one({"_id": ObjectId(file_id)})
+        data = {
+            'size' : query['file_size'],
+            'type': query['file_type'],
+            'name': query['file_name']
+        }
+        print(data)
+        return Response(data)
+
 
 
 # file upload
@@ -141,6 +163,7 @@ def fileUpload(request):
 
 
 
+
     # for chunk in file.chunks():
     #     destination.write(chunk)
     # destination.close()
@@ -165,4 +188,4 @@ def fileUpload(request):
     # with open(sample_file, 'r') as f:
     #     print(f.read())
     # print(request.FILES)
-    return Response({'message': 'Files'})
+    # return Response({'message': 'Files'})

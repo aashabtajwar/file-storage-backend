@@ -1,8 +1,13 @@
 asgiref==3.5.2
+certifi==2022.9.24
 Django==3.2.15
 django-filter==22.1
 djangorestframework==3.13.1
 Markdown==3.4.1
+minio==7.1.12
 mysqlclient==2.1.1
+PyJWT==2.5.0
+pymongo==4.2.0
 pytz==2022.2.1
 sqlparse==0.4.2
+urllib3==1.26.12
