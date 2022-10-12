@@ -32,12 +32,13 @@ class CustomAuthentication:
 
 
 class TokenJWT:
+    # access token
     # method to generate token
     # the claims will be username, email and expiration time
     # the secret is used from here for now, but will be used a different one in future
     # the algorithm is HS256
     def generateJWT(self, username, email, id):
-        encode = jwt.encode({
+        access_token = jwt.encode({
             "exp": time.time() + 3600,
             "username": username,
             "email": email,
@@ -46,4 +47,16 @@ class TokenJWT:
         secret,
         algorithm="HS256"
         )
-        return encode
+
+        # refresh token
+        refresh_token = jwt.encode(
+            {
+                "exp" : time.time() + 86400,
+                "username" : username,
+                "email" : email,
+                "id" : id
+            },
+            secret,
+            algorithm="HS256"
+        )
+        return access_token, refresh_token
