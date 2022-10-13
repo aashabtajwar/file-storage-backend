@@ -50,7 +50,7 @@ class AuthMiddleware:
             # print('Should follow here')
             url = request.META['PATH_INFO']
             # print(f'path info {url}')
-            if (request.META['PATH_INFO'] != '/api/user/login/') and (request.META['PATH_INFO'] != '/api/user/register/'):
+            if (request.META['PATH_INFO'] != '/api/user/login/') and (request.META['PATH_INFO'] != '/api/user/register/') and request.META['PATH_INFO'] != '/api/user/refreshtoken/':
 
                 return JsonResponse({"message": "Not Authorized"}, status = 401)
             # if url is for login or register, allow
@@ -64,13 +64,13 @@ class AuthMiddleware:
                 
                 # token is still active
                 # do not allow for login and register
-                if request.META['PATH_INFO'] == '/api/user/login/' or request.META['PATH_INFO'] == '/api/user/register/':
+                if request.META['PATH_INFO'] == '/api/user/login/' or request.META['PATH_INFO'] == '/api/user/register/' or request.META['PATH_INFO'] == '/api/user/refreshtoken/':
                     return JsonResponse({"message": "Unauthorized"}, status = 401)
 
             except jwt.ExpiredSignatureError:
                 # token has expired
                 # do not allow anything other than login or register 
-                if request.META['PATH_INFO'] != '/api/user/login/' and request.META['PATH_INFO'] != '/api/user/register/':
+                if request.META['PATH_INFO'] != '/api/user/login/' and request.META['PATH_INFO'] != '/api/user/register/' and request.META['PATH_INFO'] != '/api/user/refreshtoken/':
                     return JsonResponse({"message": "Unauthorized"}, status = 401)
 
         # print('Printing relative url')

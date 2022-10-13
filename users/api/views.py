@@ -1,7 +1,10 @@
+from urllib import request
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+
+import jwt
 
 from .serializers import RegistrationSerializer, UserSerializer 
 from .backends import CustomAuthentication, TokenJWT
@@ -11,9 +14,13 @@ from .backends import CustomAuthentication
 
 
 
-class GenerateRefreshToken(APIView):
-    pass
-
+class GetAccessFromRefresh(APIView):
+    def post(self, request, format = None):
+        instance = TokenJWT()
+        message = instance.generateNewAccessTokens(request.data['refresh_token'])
+        if message.get('message') == "Not Acceptable":
+            return Response(message, status = status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(message)
 
 @api_view(['GET'])
 def testRoute(request):

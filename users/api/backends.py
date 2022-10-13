@@ -31,6 +31,7 @@ class CustomAuthentication:
             return None
 
 
+
 class TokenJWT:
     # method to generate tokens
     # the secret is used from here for now, but will be used a different one in future
@@ -39,6 +40,17 @@ class TokenJWT:
         refresh_token = self.generateRefreshToken(user_id)
         
         return access_token, refresh_token
+
+    # method for generating new access tokens from refresh tokens
+    def generateNewAccessTokens(self, token):
+        token_content = jwt.decode(token, secret, algorithms='HS256')
+        if token_content['type'] != 'refresh':
+            return {"message": "Not Acceptable"}
+        
+        # otherwise
+        user = User.objects.get(id=token_content['id'])
+        access_token = self.generateAccessToken(user.username, user.email, user.id)
+        return {"new_access_token": access_token}
 
     # method for generating access token
     def generateAccessToken(self, username, email, user_id):
@@ -57,6 +69,7 @@ class TokenJWT:
         )
         return token
 
+
     # mothod for generating refresh token
     def generateRefreshToken(self, user_id):
         # refresh token
@@ -73,3 +86,5 @@ class TokenJWT:
             algorithm="HS256"
         )
         return token
+
+    

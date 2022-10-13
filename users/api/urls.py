@@ -7,5 +7,6 @@ from .import views
 urlpatterns = [
     path('register/', views.userRegistration, name='register'),
     path('login/', views.userLogin, name='user-login'),
-    path('test/', views.testRoute, name='test')
+    path('test/', views.testRoute, name='test'),
+    path('refreshtoken/', views.GetAccessFromRefresh.as_view(), name='get-access')
 ]
