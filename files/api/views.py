@@ -29,7 +29,6 @@ minioBucket = Minio(
 bucket_name = "djangofilestorage"
 
 
-
 # trying out a class based view
 class GetTest(APIView):
     def get(self, request, format = None):
@@ -66,12 +65,11 @@ class UploadFile(APIView):
         insert = collection.insert_one(file_metadata)
         file_id = str(insert.inserted_id)
 
-        # now handle file
+        # now handle the file
         fileBytes = '.'.encode('utf-8')
         for chunk in file.chunks():
             fileBytes += chunk
         fileValueStream = io.BytesIO(fileBytes)
-        print('Now printing file bytes')
         print(fileValueStream)
         
         minioBucket.put_object("djangofilestorage", file_id, fileValueStream, length=len(fileBytes))
@@ -79,7 +77,7 @@ class UploadFile(APIView):
         return Response({"message": "Successfully Uploaded File"})
 
 
-# Retrieve File
+# Retrieve and Delete File
 class RetrieveFile(APIView):
     # @route - post - retrive file
     # 6344ef97fdebad7c67d072fb
@@ -98,7 +96,6 @@ class RetrieveFile(APIView):
 
 
 
-# 
 
 
 

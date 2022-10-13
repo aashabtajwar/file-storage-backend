@@ -9,6 +9,12 @@ from .backends import CustomAuthentication, TokenJWT
 from .backends import CustomAuthentication
 
 
+
+
+class GenerateRefreshToken(APIView):
+    pass
+
+
 @api_view(['GET'])
 def testRoute(request):
     token = request.META.get('HTTP_AUTHORIZATION')

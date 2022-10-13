@@ -32,31 +32,44 @@ class CustomAuthentication:
 
 
 class TokenJWT:
-    # access token
-    # method to generate token
-    # the claims will be username, email and expiration time
+    # method to generate tokens
     # the secret is used from here for now, but will be used a different one in future
-    # the algorithm is HS256
-    def generateJWT(self, username, email, id):
-        access_token = jwt.encode({
-            "exp": time.time() + 3600,
-            "username": username,
-            "email": email,
-            "id" : id
-        },
-        secret,
-        algorithm="HS256"
-        )
+    def generateJWT(self, username, email, user_id):
+        access_token = self.generateAccessToken(username, email, user_id)
+        refresh_token = self.generateRefreshToken(user_id)
+        
+        return access_token, refresh_token
 
-        # refresh token
-        refresh_token = jwt.encode(
+    # method for generating access token
+    def generateAccessToken(self, username, email, user_id):
+        # the claims will be username, email and expiration time
+        # the algorithm is HS256
+        token =jwt.encode(
             {
-                "exp" : time.time() + 86400,
-                "username" : username,
-                "email" : email,
-                "id" : id
+                "exp": time.time() + 3600,
+                "username": username,
+                "email": email,
+                "id" : user_id,
+                "type": "access",
             },
             secret,
             algorithm="HS256"
         )
-        return access_token, refresh_token
+        return token
+
+    # mothod for generating refresh token
+    def generateRefreshToken(self, user_id):
+        # refresh token
+        # create refresh token in a way 
+        # such that it cannot be used as an access token 
+        # (i.e. client cannot use it to gain access to routes)
+        token = jwt.encode(
+            {
+                "exp" : time.time() + 86400,
+                "id" : user_id,
+                "type": "refresh"
+            },
+            secret,
+            algorithm="HS256"
+        )
+        return token
