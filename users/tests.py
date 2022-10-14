@@ -53,6 +53,7 @@ class TestViews(TestSetup):
 
         registrationResponse = self.client.post(self.register_url, self.user_data, format="json")
         loginResponse = self.client.post(self.login_url, self.login_data, format="json")
+        print(loginResponse.get('access_token'))
         # import pdb
         # pdb.set_trace()
         self.assertEqual(loginResponse.status_code, 200)
