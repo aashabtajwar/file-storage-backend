@@ -12,7 +12,8 @@ from minio import Minio
 from bson.objectid import ObjectId
 # && apk add install libmysqlclient-dev
 # && apk add --virtual build-deps gcc python3-dev musl-dev
-        
+
+from users.models import User
 
 # import and connect to mongodb
 import pymongo
@@ -27,6 +28,8 @@ minioBucket = Minio(
     secure=False
 )
 bucket_name = "djangofilestorage"
+
+MAX_STORAGE = 2000000000
 
 
 # trying out a class based view
@@ -53,6 +56,17 @@ class UploadFile(APIView):
         # get file metadata (file type, file size, file name)
         # get additional metadata -> user_id, username
         file = request.FILES.get('file')
+
+        # query user to check its storage information
+        # query the user by id
+        user = User.objects.get(email = token_content['email'])
+        storage = user.storage
+        
+        if (storage + file.size > MAX_STORAGE):
+            return Response({"message" : "Not enough Storage space to upload this file"})
+
+
+
         file_metadata = {
             'file_size' : file.size,
             'file_type' : file.content_type,
@@ -73,6 +87,11 @@ class UploadFile(APIView):
         print(fileValueStream)
         
         minioBucket.put_object("djangofilestorage", file_id, fileValueStream, length=len(fileBytes))
+
+        # add file size to the current storage
+        user.storage = storage + file.size
+        user.save()
+
 
         return Response({"message": "Successfully Uploaded File"})
 
