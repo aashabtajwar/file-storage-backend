@@ -1,3 +1,4 @@
+from email.policy import default
 from typing import Type
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
@@ -46,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
+    storage = models.BigIntegerField(default=0)
     is_verified = models.BooleanField(default=False) # will not be verified at first
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

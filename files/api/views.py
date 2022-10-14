@@ -77,7 +77,7 @@ class UploadFile(APIView):
         return Response({"message": "Successfully Uploaded File"})
 
 
-# Retrieve and Delete File
+# Retrieve and Delete Single File
 class RetrieveFile(APIView):
     # @route - post - retrive file
     # 6344ef97fdebad7c67d072fb
@@ -95,7 +95,9 @@ class RetrieveFile(APIView):
         return Response({"message": "deleted object"})
 
 
-
+# retrive all files for a user
+class RetrieveAllFiles(APIView):
+    pass
 
 
 
